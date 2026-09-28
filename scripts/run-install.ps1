@@ -47,3 +47,8 @@ $exitCode = & aws ecs describe-tasks --region $region --cluster $cluster --tasks
 $reason   = & aws ecs describe-tasks --region $region --cluster $cluster --tasks $taskArn --query 'tasks[0].stoppedReason' --output text
 Write-Host "==> task $status, exit code $exitCode ($reason)"
 if ($exitCode -ne '0') { exit 1 }
+
+# The install task's cache purge only reaches its own (non-existent) Varnish, so the web
+# tasks keep serving pages cached before the install. Roll the web service to start fresh.
+Write-Host '==> restarting web service so Varnish starts with an empty cache'
+& aws ecs update-service --region $region --cluster $cluster --service web --force-new-deployment --query 'service.deployments[0].rolloutState' --output text

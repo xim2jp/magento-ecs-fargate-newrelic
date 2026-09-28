@@ -83,6 +83,8 @@ Internet ──> Route 53 (actest.examp1e.site) ──> AWS WAF ──> ALB (pub
 - **install タスク**: DB に `core_config_data` が無ければ `setup:install`、あれば `setup:upgrade --keep-generated`。イメージ更新後の DB マイグレーションにも使う。
 - **DB ユーザー**: RDS のマスターユーザー(`magento`)は権限を `rds_superuser_role` 経由で持つため、Magento の権限チェック(SHOW GRANTS の直接付与のみを見る)に落ちる。install タスクが `magento_app` ユーザーを作り `magento` スキーマに直接 GRANT し、全コンテナはこのユーザーで接続する(パスワードはマスターと同じ SSM の値)。
 - **Varnish コンテナ**: Fargate では非 root ユーザーが :80 を bind できないため root で起動(varnishd がワーカーを降格)。
+- **サンプルデータ**: production モードでは投入に失敗する(MSI の在庫テーブルが未作成で "Could not receive Stock Item data"、Adobe KB「Errors installing optional sample data」)。install タスクだけ `MAGE_MODE=developer` で動かす。画像は composer がイメージの `pub/media` に置くが EFS マウントで隠れるため、install タスクが `vendor/magento/sample-data-media` から EFS に投入し、`media-gallery:sync` で登録する。
+- **install 後のキャッシュ**: install タスクからの Varnish パージは届かないので、`run-install.ps1` が最後に web サービスを再デプロイして Varnish を空の状態で起動し直す。
 
 ## New Relic 連携
 
