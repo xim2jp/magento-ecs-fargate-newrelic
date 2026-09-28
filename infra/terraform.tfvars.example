@@ -1,0 +1,21 @@
+# Copy to terraform.tfvars (git-ignored) and fill in what you need.
+
+# --- New Relic -------------------------------------------------------------
+# Ingest license key (New Relic > API keys > "INGEST - LICENSE"). Leave unset to
+# build the environment without New Relic first; add it later and re-apply.
+# newrelic_license_key = "<40 文字のライセンスキー>"
+# Data center of your New Relic account: US (default), EU or JP
+# newrelic_region = "US"
+# newrelic_app_name = "sunfish-magento"
+
+# --- access ----------------------------------------------------------------
+# Restrict storefront/admin access to your office IP(s)
+# alb_allowed_cidrs = ["203.0.113.10/32"]
+# acm_certificate_arn = "arn:aws:acm:ap-northeast-1:123456789012:certificate/..."
+# magento_base_url    = "https://shop.example.com/"
+
+# --- sizing ----------------------------------------------------------------
+# web_desired_count = 1
+# web_task_cpu      = 2048
+# web_task_memory   = 8192
+# db_instance_class = "db.t4g.medium"

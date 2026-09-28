@@ -1,0 +1,13 @@
+# credentials
+.env
+
+# terraform
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/*.tfplan
+infra/terraform.tfvars
+infra/crash.log
+
+# docker build leftovers
+docker/**/.build/
